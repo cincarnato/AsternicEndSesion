@@ -1,0 +1,6 @@
+## Requerimientos
+
+
+- php
+- php-cli
+- php-mysqli
