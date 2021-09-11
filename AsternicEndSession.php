@@ -23,7 +23,7 @@ echo "DB HOST INFO: ".$mysqli->host_info . "\n";
 
 //Verifico si se requiere fecha especifica
 
-$dateRegex = "^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$";
+$dateRegex = "/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/";
 
 if(isset($argv[1])){
     if(preg_match($dateRegex,$argv[1])){
@@ -44,7 +44,7 @@ $dateTo->modify('+1 day');
 //1. BUSCO LAS START SESIONES
 echo "Procesar END SESION desde: ".$dateFrom->format("Y-m-d")." hasta: ".$dateTo->format("Y-m-d"). "\n";
 
-$queryStartSession = 'SELECT id,agent,datetime, event FROM agent_activity where event = "'.EVENT_START_SESSION.'" and datetime >= "'.$dateFrom->format("Y-m-d").'" and datetime < "'.$dateTo->format("Y-m-d").'" GROUP BY agent';
+$queryStartSession = 'SELECT id,agent,datetime,queue,event FROM agent_activity where event = "'.EVENT_START_SESSION.'" and datetime >= "'.$dateFrom->format("Y-m-d").'" and datetime < "'.$dateTo->format("Y-m-d").'" GROUP BY agent';
 //echo "QUERY START SESSION: ".$queryStartSession. "\n";
 $resultStartSession = $mysqli->query($queryStartSession);
 
