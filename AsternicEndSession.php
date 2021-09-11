@@ -53,6 +53,7 @@ while ($row = $resultStartSession->fetch_assoc()) {
     //echo " id = " . $row['id'] . " | agent = " . $row['agent'] . " | datetime = " . $row['datetime'] . " | event = " . $row['event'] . "\n";
     //POR CADA AGENT BUSCO EL ULTIMO EVENTO END CALL
     $agent = $row['agent'];
+    $queue = $row['queue'];
     $queryEndCall = 'SELECT id,agent,datetime, event FROM agent_activity where agent = "'.$agent.'" and  event = "'.EVENT_END_CALL.'" and datetime >= "'.$dateFrom->format("Y-m-d").'" and datetime < "'.$dateTo->format("Y-m-d").'" ORDER BY datetime DESC LIMIT 1';
     //echo "QUERY END CALL: ".$queryEndCall. "\n";
     $resultEndCall = $mysqli->query($queryEndCall);
@@ -64,7 +65,7 @@ while ($row = $resultStartSession->fetch_assoc()) {
         $sessionTime = $sessionDateTo->getTimestamp() - $sessionDateFrom->getTimestamp();
 
         //POR CADA AGENT INSERTO UN END SESSION
-        $queryEndSession= 'INSERT INTO agent_activity (datetime, agent, event, lastedforseconds) VALUES ("'.$sessionDateTo->format("Y-m-d H:i:s").'", "'.$agent.'", "'.EVENT_END_SESSION.'", '.$sessionTime.')';
+        $queryEndSession= 'INSERT INTO agent_activity (datetime,queue, agent, event, lastedforseconds) VALUES ("'.$sessionDateTo->format("Y-m-d H:i:s").'", "'.$queue.'","'.$agent.'", "'.EVENT_END_SESSION.'", '.$sessionTime.')';
         $resultEndSession = $mysqli->query($queryEndSession);
 
         echo '{"agent": "'.$agent.'", "from": "'.$sessionDateFrom->format("Y-m-d H:i:s").'", "to": "'.$sessionDateTo->format("Y-m-d H:i:s").'", "time": "'. $sessionTime .'", "insert": '.($resultEndSession ? 'true' : 'false' ).' }'.PHP_EOL.PHP_EOL;
